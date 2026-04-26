@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String         @id @default(cuid())
+  name           String
+  email          String         @unique
+  passwordHash   String         @default("")
+  xp             Int            @default(0)
+  level          Int            @default(1)
+  coins          Int            @default(0)
+  hearts         Int            @default(3)
+  selectedAvatar String         @default("guardian")
+  createdAt      DateTime       @default(now())
+  progress       UserProgress[]
+  badges         UserBadge[]
+  events         GameEvent[]
+}
+
+model GameLevel {
+  id                String         @id @default(cuid())
+  title             String
+  description       String
+  world             String
+  order             Int
+  xpReward          Int            @default(100)
+  coinReward        Int            @default(50)
+  unlockedByDefault Boolean        @default(false)
+  progress          UserProgress[]
+  events            GameEvent[]
+}
+
+model UserProgress {
+  id        String    @id @default(cuid())
+  userId    String
+  levelId   String
+  completed Boolean   @default(false)
+  stars     Int       @default(0)
+  bestScore Int       @default(0)
+  attempts  Int       @default(0)
+  user      User      @relation(fields: [userId], references: [id])
+  level     GameLevel @relation(fields: [levelId], references: [id])
+
+  @@unique([userId, levelId])
+}
+
+model Badge {
+  id              String      @id @default(cuid())
+  name            String      @unique
+  description     String
+  icon            String
+  unlockCondition String
+  users           UserBadge[]
+}
+
+model UserBadge {
+  id         String   @id @default(cuid())
+  userId     String
+  badgeId    String
+  unlockedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  badge      Badge    @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+}
+
+model GameEvent {
+  id        String    @id @default(cuid())
+  userId    String
+  levelId   String
+  eventType String
+  score     Int       @default(0)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+  level     GameLevel @relation(fields: [levelId], references: [id])
+}
