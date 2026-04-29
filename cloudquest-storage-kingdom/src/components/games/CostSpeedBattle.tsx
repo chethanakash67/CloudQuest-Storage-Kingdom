@@ -12,7 +12,7 @@ import PlayerStatsBar from '@/components/ui/PlayerStatsBar';
 import { useRouter } from 'next/navigation';
 import { DollarSign, Zap } from 'lucide-react';
 
-type StorageClass = 'Standard' | 'Infrequent Access' | 'Archive' | 'Deep Archive';
+type StorageClass = 'Standard' | 'Nearline' | 'Coldline' | 'Archive';
 
 interface DataCard {
   id: number;
@@ -27,27 +27,20 @@ interface DataCard {
 
 const COST_MAP: Record<StorageClass, number> = {
   'Standard': 25,
-  'Infrequent Access': 15,
-  'Archive': 8,
-  'Deep Archive': 3,
-};
-
-const SPEED_MAP: Record<StorageClass, number> = {
-  'Standard': 100,
-  'Infrequent Access': 75,
-  'Archive': 40,
-  'Deep Archive': 10,
+  'Nearline': 16,
+  'Coldline': 9,
+  'Archive': 4,
 };
 
 const DATA_CARDS_POOL: Omit<DataCard, 'id' | 'assigned'>[] = [
-  { name: 'User Avatars', emoji: '👤', description: 'Profile images loaded on every login', accessFrequency: 'High (daily)', size: '50 GB', correctClass: 'Standard' },
-  { name: 'Course Videos', emoji: '🎥', description: 'Streaming content for active courses', accessFrequency: 'High (daily)', size: '500 GB', correctClass: 'Standard' },
-  { name: 'Previous Exams', emoji: '📝', description: 'Past exam papers from last semester', accessFrequency: 'Medium (monthly)', size: '20 GB', correctClass: 'Infrequent Access' },
-  { name: 'System Logs', emoji: '📊', description: 'Server logs from previous quarter', accessFrequency: 'Low (quarterly)', size: '100 GB', correctClass: 'Infrequent Access' },
-  { name: 'Old Projects', emoji: '📁', description: 'Student projects from 3 years ago', accessFrequency: 'Very Low (yearly)', size: '200 GB', correctClass: 'Archive' },
-  { name: 'Tax Records', emoji: '📑', description: 'Financial records kept for compliance', accessFrequency: 'Rare (emergency only)', size: '30 GB', correctClass: 'Deep Archive' },
-  { name: 'API Responses', emoji: '🔌', description: 'Cached API data refreshed hourly', accessFrequency: 'Very High (hourly)', size: '10 GB', correctClass: 'Standard' },
-  { name: 'Alumni Records', emoji: '🎓', description: 'Graduate records from past decade', accessFrequency: 'Extremely Rare', size: '150 GB', correctClass: 'Deep Archive' },
+  { name: 'User Avatars', emoji: '👤', description: 'GCS profile images loaded on every login', accessFrequency: 'High (daily)', size: '50 GB', correctClass: 'Standard' },
+  { name: 'Course Videos', emoji: '🎥', description: 'Active course media streamed from Cloud Storage', accessFrequency: 'High (daily)', size: '500 GB', correctClass: 'Standard' },
+  { name: 'Previous Exams', emoji: '📝', description: 'Past exam papers reviewed each month', accessFrequency: 'Medium (monthly)', size: '20 GB', correctClass: 'Nearline' },
+  { name: 'Billing Exports', emoji: '🧾', description: 'Monthly BigQuery billing exports saved to GCS', accessFrequency: 'Medium (monthly)', size: '35 GB', correctClass: 'Nearline' },
+  { name: 'Audit Logs', emoji: '📊', description: 'Server logs from previous quarter', accessFrequency: 'Low (quarterly)', size: '100 GB', correctClass: 'Coldline' },
+  { name: 'Research Snapshots', emoji: '🔬', description: 'Experiment data checked a few times per year', accessFrequency: 'Low (semiannual)', size: '240 GB', correctClass: 'Coldline' },
+  { name: 'Tax Records', emoji: '📑', description: 'Financial records kept for compliance', accessFrequency: 'Rare (emergency only)', size: '30 GB', correctClass: 'Archive' },
+  { name: 'Alumni Records', emoji: '🎓', description: 'Graduate records retained for a decade', accessFrequency: 'Extremely rare', size: '150 GB', correctClass: 'Archive' },
 ];
 
 export default function CostSpeedBattle() {
@@ -158,9 +151,9 @@ export default function CostSpeedBattle() {
         <div className="flex items-center justify-between py-4">
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              ⚔️ <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Cost vs Speed Battle</span>
+              ⚔️ <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Cost vs Access Battle</span>
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Optimize storage cost while maintaining performance</p>
+            <p className="text-xs text-gray-500 mt-1">Optimize GCS cost using access frequency and retention needs</p>
           </div>
           {gameState === 'playing' && (
             <Timer duration={GAME_CONFIG.COST_SPEED_TIME} onTimeUp={handleTimeUp} />
@@ -260,7 +253,7 @@ export default function CostSpeedBattle() {
               >
                 <p className="text-xs text-gray-400 mb-2 text-center">Assign <strong className="text-white">{selectedCard.name}</strong> to:</p>
                 <div className="grid grid-cols-4 gap-2">
-                  {(['Standard', 'Infrequent Access', 'Archive', 'Deep Archive'] as StorageClass[]).map((sc) => (
+                  {(['Standard', 'Nearline', 'Coldline', 'Archive'] as StorageClass[]).map((sc) => (
                     <button
                       key={sc}
                       onClick={() => handleAssign(sc)}
@@ -279,14 +272,15 @@ export default function CostSpeedBattle() {
         {/* Learning Tip */}
         <div className="p-3 bg-orange-950/30 rounded-xl border border-orange-900/30 mt-4">
           <p className="text-[11px] text-orange-400">
-            💡 <strong>Cloud Concept:</strong> Choosing the right storage class is about balancing <strong>cost</strong> and <strong>access speed</strong>. Frequently accessed data needs fast (expensive) storage; rarely accessed data can use cheap (slow) storage.
+            💡 <strong>GCP Concept:</strong> Choosing a Cloud Storage class is about balancing <strong>storage cost</strong>, <strong>retrieval fees</strong>, and <strong>minimum storage duration</strong>. Hot data belongs in Standard; colder data can move to Nearline, Coldline, or Archive.
           </p>
         </div>
       </div>
 
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
-        levelName="Cost vs Speed Battle"
+        levelName="Cost vs Access Battle"
+        levelOrder={4}
         score={correctCount * 15}
         maxScore={cards.length * 15}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + correctCount * GAME_CONFIG.XP_PER_CORRECT}
@@ -300,7 +294,7 @@ export default function CostSpeedBattle() {
       <GameOverModal
         isOpen={gameState === 'gameover'}
         reason={hearts <= 0 ? 'hearts' : 'time'}
-        levelName="Cost vs Speed Battle"
+        levelName="Cost vs Access Battle"
         score={correctCount * 15}
         onRetry={handleRetry}
         onBackToMap={() => router.push('/map')}

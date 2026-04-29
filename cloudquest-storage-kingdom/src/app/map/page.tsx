@@ -8,15 +8,15 @@ import Link from 'next/link';
 import PlayerStatsBar from '@/components/ui/PlayerStatsBar';
 
 const WORLD_COLORS: Record<string, { bg: string; border: string; text: string; glow: string }> = {
-  'Bucket Island': { bg: 'from-cyan-600/20 to-blue-600/20', border: 'border-cyan-500/30', text: 'text-cyan-400', glow: 'shadow-cyan-500/20' },
-  'Class Cave': { bg: 'from-emerald-600/20 to-green-600/20', border: 'border-emerald-500/30', text: 'text-emerald-400', glow: 'shadow-emerald-500/20' },
-  'Access Castle': { bg: 'from-red-600/20 to-pink-600/20', border: 'border-red-500/30', text: 'text-red-400', glow: 'shadow-red-500/20' },
+  'GCS Bucket Island': { bg: 'from-cyan-600/20 to-blue-600/20', border: 'border-cyan-500/30', text: 'text-cyan-400', glow: 'shadow-cyan-500/20' },
+  'GCP Storage Class Cave': { bg: 'from-emerald-600/20 to-green-600/20', border: 'border-emerald-500/30', text: 'text-emerald-400', glow: 'shadow-emerald-500/20' },
+  'GCP IAM Access Castle': { bg: 'from-red-600/20 to-pink-600/20', border: 'border-red-500/30', text: 'text-red-400', glow: 'shadow-red-500/20' },
 };
 
 const WORLD_EMOJIS: Record<string, string> = {
-  'Bucket Island': '🏝️',
-  'Class Cave': '🏔️',
-  'Access Castle': '🏰',
+  'GCS Bucket Island': '🏝️',
+  'GCP Storage Class Cave': '🏔️',
+  'GCP IAM Access Castle': '🏰',
 };
 
 export default function GameMapPage() {
@@ -171,6 +171,12 @@ export default function GameMapPage() {
           transition={{ delay: 1 }}
           className="flex justify-center gap-4 mt-8"
         >
+          <Link
+            href="/knowledge"
+            className="px-5 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium hover:bg-cyan-500/20 transition-colors"
+          >
+            📖 Knowledge
+          </Link>
           <Link
             href="/rewards"
             className="px-5 py-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-sm font-medium hover:bg-yellow-500/20 transition-colors"

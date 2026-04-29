@@ -1,6 +1,6 @@
 # ☁️ CloudQuest: Storage Kingdom
 
-An educational 2D mission-based game where students learn Cloud Storage concepts by playing interactive levels. Become a **Cloud Guardian** and protect the digital kingdom!
+An educational 2D mission-based game where students learn Google Cloud Storage concepts by playing interactive levels. Become a **GCP Storage Guardian** and protect the digital kingdom!
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4) ![Prisma](https://img.shields.io/badge/Prisma-7-2D3748)
 
@@ -8,17 +8,17 @@ An educational 2D mission-based game where students learn Cloud Storage concepts
 
 The **Storage Kingdom** is divided into 3 lands with 6 unique game levels:
 
-### 🏝️ Bucket Island
-- **Level 1: Bucket Sorting** — Sort falling files into correct storage buckets
-- **Level 2: Object Key Maze** — Navigate a maze using correct object key paths
+### 🏝️ GCS Bucket Island
+- **Level 1: GCS Bucket Sorting** — Sort falling files into correct Google Cloud Storage buckets
+- **Level 2: Object Name Maze** — Navigate a maze using correct GCS object names
 
-### 🏔️ Class Cave
-- **Level 3: Storage Class Shop** — Assign storage classes to customer data
-- **Level 4: Cost vs Speed Battle** — Optimize storage cost with a limited budget
+### 🏔️ GCP Storage Class Cave
+- **Level 3: Storage Class Shop** — Assign GCP Cloud Storage classes to customer data
+- **Level 4: Cost vs Access Battle** — Optimize GCS cost using access patterns and retention needs
 
-### 🏰 Access Castle
-- **Level 5: Permission Defense** — Allow or block characters based on roles
-- **Level 6: Fix the Leaky Bucket** — Toggle security settings to stop data leaks
+### 🏰 GCP IAM Access Castle
+- **Level 5: GCP IAM Permission Defense** — Allow or block GCS access based on IAM roles and principals
+- **Level 6: Fix the Leaky GCS Bucket** — Toggle GCP bucket security settings to stop data leaks
 
 ## ⚡ Game Mechanics
 
@@ -133,22 +133,22 @@ npm run dev
 | Badge | Unlock Condition |
 |-------|-----------------|
 | 🪣 Bucket Builder | Complete Level 1 |
-| 🔑 Object Master | Complete Level 2 |
+| 🔑 Object Name Master | Complete Level 2 |
 | 📦 Storage Strategist | Complete Level 3 |
 | 💰 Cost Controller | Complete Level 4 |
-| 🛡️ Access Defender | Complete Level 5 |
+| 🛡️ IAM Defender | Complete Level 5 |
 | 🔧 Leak Fixer | Complete Level 6 |
-| ☁️ Cloud Guardian | Complete All Levels |
+| ☁️ GCP Storage Guardian | Complete All Levels |
 
 ## 📖 Learning Outcomes
 
 Through gameplay, students learn:
-- **Buckets & Objects** — Containers and file storage
-- **Object Keys** — Unique paths to identify stored data
-- **Storage Classes** — Standard, IA, Archive, Deep Archive
-- **Cost Optimization** — Balancing cost vs access speed
-- **Access Control** — IAM roles, bucket policies, permissions
-- **Security** — Public access, anonymous writes, private objects
+- **GCS Buckets & Objects** — Google Cloud Storage containers and object storage
+- **Object Names** — Unique GCS names and prefixes to identify stored data
+- **Storage Classes** — Standard, Nearline, Coldline, Archive
+- **Cost Optimization** — Balancing storage cost, retrieval fees, and minimum duration
+- **Access Control** — GCP IAM roles, principals, service accounts, and bucket-level permissions
+- **Security** — Public Access Prevention, Uniform Bucket-Level Access, allUsers grants
 
 ## 🔊 Sound Effects
 
@@ -162,4 +162,4 @@ The game uses the Web Audio API to generate synthetic sound effects:
 
 ---
 
-Built with ❤️ for cloud storage education
+Built with ❤️ for GCP Cloud Storage education

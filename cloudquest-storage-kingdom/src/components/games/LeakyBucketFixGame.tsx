@@ -24,40 +24,40 @@ interface SecuritySetting {
 
 const INITIAL_SETTINGS: SecuritySetting[] = [
   {
-    id: 'block-public',
-    name: 'Block All Public Access',
-    description: 'Prevents any anonymous or public access to the bucket',
+    id: 'public-access-prevention',
+    name: 'Public Access Prevention',
+    description: 'Prevents allUsers or allAuthenticatedUsers from making the bucket public',
     currentState: false,
     correctState: true,
     icon: '🔒',
-    category: 'Access',
+    category: 'GCP Public Access',
   },
   {
-    id: 'teacher-role',
-    name: 'Allow Only Teacher Role',
-    description: 'Restrict read access to users with Teacher IAM role',
+    id: 'uniform-bucket-level-access',
+    name: 'Uniform Bucket-Level Access',
+    description: 'Uses bucket-level IAM and disables per-object ACLs',
     currentState: false,
     correctState: true,
-    icon: '👩‍🏫',
-    category: 'Roles',
+    icon: '🛡️',
+    category: 'GCP IAM',
   },
   {
-    id: 'remove-anon-write',
-    name: 'Remove Anonymous Write',
-    description: 'Remove write permission for unauthenticated users',
+    id: 'allusers-write',
+    name: 'allUsers Write Grant',
+    description: 'Legacy public write permission that can let anyone upload objects',
     currentState: true,
     correctState: false,
     icon: '✏️',
-    category: 'Permissions',
+    category: 'GCP Principals',
   },
   {
-    id: 'private-objects',
-    name: 'Enable Private Objects',
-    description: 'Set all new objects to private by default',
+    id: 'teacher-custom-role',
+    name: 'Teacher Custom IAM Role',
+    description: 'Grants read access through a scoped GCP IAM role only',
     currentState: false,
     correctState: true,
-    icon: '🔐',
-    category: 'Objects',
+    icon: '👩‍🏫',
+    category: 'GCP IAM',
   },
 ];
 
@@ -154,11 +154,11 @@ export default function LeakyBucketFixGame() {
     completeLevel(6, s);
     unlockBadge('Leak Fixer');
 
-    // Check if all levels completed for Cloud Guardian badge
+    // Check if all levels completed for GCP Storage Guardian badge
     const { completedLevels } = useGameStore.getState();
     if (completedLevels.length >= 5) {
       setTimeout(() => {
-        unlockBadge('Cloud Guardian');
+        unlockBadge('GCP Storage Guardian');
       }, 2000);
     }
   };
@@ -187,9 +187,9 @@ export default function LeakyBucketFixGame() {
         <div className="flex items-center justify-between py-4">
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              🔧 <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Fix the Leaky Bucket</span>
+              🔧 <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Fix the Leaky GCS Bucket</span>
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Toggle security settings to stop the data leak</p>
+            <p className="text-xs text-gray-500 mt-1">Toggle GCP bucket security settings to stop the data leak</p>
           </div>
           {gameState === 'playing' && (
             <Timer duration={GAME_CONFIG.LEAKY_BUCKET_TIME} onTimeUp={handleTimeUp} />
@@ -352,14 +352,15 @@ export default function LeakyBucketFixGame() {
         {/* Learning Tip */}
         <div className="p-3 bg-blue-950/30 rounded-xl border border-blue-900/30">
           <p className="text-[11px] text-blue-400">
-            💡 <strong>Cloud Concept:</strong> <strong>Public buckets</strong> can expose sensitive data. Always block public access, use IAM roles, remove anonymous permissions, and keep objects private by default.
+            💡 <strong>GCP Concept:</strong> <strong>Public GCS buckets</strong> can expose sensitive data. Use Public Access Prevention, Uniform Bucket-Level Access, scoped IAM roles, and remove allUsers grants.
           </p>
         </div>
       </div>
 
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
-        levelName="Fix the Leaky Bucket"
+        levelName="Fix the Leaky GCS Bucket"
+        levelOrder={6}
         score={settings.length * 25}
         maxScore={settings.length * 25}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + settings.length * GAME_CONFIG.XP_PER_CORRECT}
@@ -374,7 +375,7 @@ export default function LeakyBucketFixGame() {
       <GameOverModal
         isOpen={gameState === 'gameover'}
         reason={hearts <= 0 ? 'hearts' : 'time'}
-        levelName="Fix the Leaky Bucket"
+        levelName="Fix the Leaky GCS Bucket"
         score={0}
         onRetry={handleRetry}
         onBackToMap={() => router.push('/map')}

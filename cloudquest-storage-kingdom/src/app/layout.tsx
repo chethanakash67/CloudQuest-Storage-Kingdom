@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CloudQuest: Storage Kingdom | Learn Cloud Storage Through Adventure",
-  description: "An educational game where you become a Cloud Guardian, protecting and organizing a digital kingdom while learning cloud storage concepts through interactive missions.",
-  keywords: "cloud storage, educational game, AWS S3, storage classes, bucket policy, learning game",
+  title: "CloudQuest: Storage Kingdom | Learn GCP Cloud Storage Through Adventure",
+  description: "An educational game where you become a GCP Storage Guardian, protecting and organizing a digital kingdom while learning Google Cloud Storage concepts through interactive missions.",
+  keywords: "GCP Cloud Storage, Google Cloud Storage, educational game, storage classes, GCP IAM, learning game",
 };
 
 export default function RootLayout({

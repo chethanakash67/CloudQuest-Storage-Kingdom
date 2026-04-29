@@ -27,6 +27,9 @@ export interface PlayerState {
   // Badges
   unlockedBadges: string[];
   
+  // Learning Notes
+  unlockedNotes: number[];
+  
   // Notification
   notification: { type: 'badge' | 'levelUp' | 'coins' | 'xp'; message: string } | null;
 }
@@ -51,6 +54,9 @@ export interface PlayerActions {
   unlockLevel: (order: number) => void;
   unlockBadge: (badgeName: string) => void;
   
+  // Learning Notes
+  unlockNote: (levelOrder: number) => void;
+  
   // Notifications
   setNotification: (notification: PlayerState['notification']) => void;
   clearNotification: () => void;
@@ -74,6 +80,7 @@ const initialState: PlayerState = {
   completedLevels: [],
   levelStars: {},
   unlockedBadges: [],
+  unlockedNotes: [],
   notification: null,
 };
 
@@ -152,6 +159,15 @@ export const useGameStore = create<PlayerState & PlayerActions>()(
           set({
             unlockedBadges: [...current.unlockedBadges, badgeName],
             notification: { type: 'badge', message: `Badge Unlocked: ${badgeName}!` },
+          });
+        }
+      },
+
+      unlockNote: (levelOrder) => {
+        const current = get();
+        if (!current.unlockedNotes.includes(levelOrder)) {
+          set({
+            unlockedNotes: [...current.unlockedNotes, levelOrder],
           });
         }
       },

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { Shield, Cloud, Zap, Swords, BookOpen } from 'lucide-react';
 
 const floatingElements = [
@@ -18,20 +17,12 @@ const floatingElements = [
 
 const features = [
   { icon: Swords, title: '6 Unique Missions', desc: 'Sorting, maze, strategy, defense & more', color: 'from-pink-500 to-rose-500' },
-  { icon: BookOpen, title: 'Learn by Playing', desc: 'Cloud storage concepts through gameplay', color: 'from-blue-500 to-cyan-500' },
+  { icon: BookOpen, title: 'Learn by Playing', desc: 'GCP Cloud Storage concepts through gameplay', color: 'from-blue-500 to-cyan-500' },
   { icon: Zap, title: 'XP & Rewards', desc: 'Earn XP, coins, badges & unlock levels', color: 'from-yellow-500 to-orange-500' },
-  { icon: Shield, title: 'Become a Guardian', desc: 'Protect the Storage Kingdom!', color: 'from-green-500 to-emerald-500' },
+  { icon: Shield, title: 'Become a Guardian', desc: 'Protect the GCP Storage Kingdom!', color: 'from-green-500 to-emerald-500' },
 ];
 
 export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   return (
     <div className="relative min-h-screen bg-[#050510] overflow-hidden">
       {/* Background gradient orbs */}
@@ -104,7 +95,7 @@ export default function LandingPage() {
             transition={{ delay: 1 }}
             className="text-sm text-gray-500 mt-3 max-w-md mx-auto"
           >
-            Become a Cloud Guardian. Protect the digital kingdom. Master cloud storage through epic missions.
+            Become a GCP Storage Guardian. Protect the digital kingdom. Master Google Cloud Storage through epic missions.
           </motion.p>
         </motion.div>
 
@@ -162,9 +153,9 @@ export default function LandingPage() {
           <h2 className="text-center text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Three Lands Await</h2>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { name: 'Bucket Island', emoji: '🏝️', color: 'from-cyan-500/20 to-blue-500/20', border: 'border-cyan-500/20' },
-              { name: 'Class Cave', emoji: '🏔️', color: 'from-emerald-500/20 to-green-500/20', border: 'border-emerald-500/20' },
-              { name: 'Access Castle', emoji: '🏰', color: 'from-red-500/20 to-pink-500/20', border: 'border-red-500/20' },
+              { name: 'GCS Bucket Island', emoji: '🏝️', color: 'from-cyan-500/20 to-blue-500/20', border: 'border-cyan-500/20' },
+              { name: 'GCP Storage Class Cave', emoji: '🏔️', color: 'from-emerald-500/20 to-green-500/20', border: 'border-emerald-500/20' },
+              { name: 'GCP IAM Access Castle', emoji: '🏰', color: 'from-red-500/20 to-pink-500/20', border: 'border-red-500/20' },
             ].map((world) => (
               <div
                 key={world.name}
@@ -184,7 +175,7 @@ export default function LandingPage() {
           transition={{ delay: 2.5 }}
           className="mt-12 text-xs text-gray-700 text-center"
         >
-          Learn Cloud Storage · Master Buckets, Objects, Classes & Permissions
+          Learn GCP Cloud Storage · Master Buckets, Objects, Classes & IAM
         </motion.p>
       </div>
     </div>

@@ -11,7 +11,7 @@ import GameOverModal from '@/components/ui/GameOverModal';
 import PlayerStatsBar from '@/components/ui/PlayerStatsBar';
 import { useRouter } from 'next/navigation';
 
-type StorageClass = 'Standard' | 'Infrequent Access' | 'Archive' | 'Deep Archive';
+type StorageClass = 'Standard' | 'Nearline' | 'Coldline' | 'Archive';
 
 interface Customer {
   id: number;
@@ -23,22 +23,22 @@ interface Customer {
   hint: string;
 }
 
-const STORAGE_CLASSES: { name: StorageClass; emoji: string; color: string; description: string; cost: string; speed: string }[] = [
-  { name: 'Standard', emoji: '⚡', color: 'from-blue-500 to-cyan-500', description: 'Fast & frequent access', cost: '$$$', speed: 'Instant' },
-  { name: 'Infrequent Access', emoji: '📦', color: 'from-green-500 to-emerald-500', description: 'Cheaper for rare access', cost: '$$', speed: 'Fast' },
-  { name: 'Archive', emoji: '🗄️', color: 'from-orange-500 to-amber-500', description: 'Cheap but slow retrieval', cost: '$', speed: 'Hours' },
-  { name: 'Deep Archive', emoji: '🏔️', color: 'from-purple-500 to-violet-500', description: 'Cheapest, very slow', cost: '¢', speed: '12+ Hours' },
+const STORAGE_CLASSES: { name: StorageClass; emoji: string; color: string; description: string; cost: string; minDuration: string }[] = [
+  { name: 'Standard', emoji: '⚡', color: 'from-blue-500 to-cyan-500', description: 'Hot data, frequent access', cost: '$$$', minDuration: 'None' },
+  { name: 'Nearline', emoji: '📦', color: 'from-green-500 to-emerald-500', description: 'Monthly access', cost: '$$', minDuration: '30d' },
+  { name: 'Coldline', emoji: '🧊', color: 'from-cyan-500 to-sky-500', description: 'Quarterly access', cost: '$', minDuration: '90d' },
+  { name: 'Archive', emoji: '🗄️', color: 'from-purple-500 to-violet-500', description: 'Yearly retention', cost: '¢', minDuration: '365d' },
 ];
 
 const ALL_CUSTOMERS: Customer[] = [
-  { id: 1, name: 'Student Portal', emoji: '👨‍🎓', dataDescription: 'Daily profile pictures', frequency: 'Multiple times daily', correctClass: 'Standard', hint: 'Accessed constantly by users' },
-  { id: 2, name: 'School Website', emoji: '🏫', dataDescription: 'Homepage banner images', frequency: 'Every page load', correctClass: 'Standard', hint: 'Needs instant loading' },
-  { id: 3, name: 'HR Department', emoji: '👔', dataDescription: 'Monthly payroll reports', frequency: 'Once a month', correctClass: 'Infrequent Access', hint: 'Only needed monthly' },
-  { id: 4, name: 'IT Department', emoji: '💻', dataDescription: 'Quarterly audit logs', frequency: 'Every 3 months', correctClass: 'Infrequent Access', hint: 'Reviewed quarterly' },
-  { id: 5, name: 'Compliance Team', emoji: '📋', dataDescription: 'Last year tax records', frequency: 'Rarely, maybe once a year', correctClass: 'Archive', hint: 'Rarely accessed, keep for compliance' },
-  { id: 6, name: 'Data Team', emoji: '📊', dataDescription: 'Old analytics data (2 years ago)', frequency: 'Almost never', correctClass: 'Archive', hint: 'Historical data, seldom needed' },
-  { id: 7, name: 'Legal Department', emoji: '⚖️', dataDescription: 'Legal records from 2015', frequency: 'Extremely rare, only if lawsuit', correctClass: 'Deep Archive', hint: 'Keep forever, almost never accessed' },
-  { id: 8, name: 'Archive Manager', emoji: '🗃️', dataDescription: 'Decade-old backup tapes data', frequency: 'Virtually never', correctClass: 'Deep Archive', hint: 'Decades old, absolute minimum cost' },
+  { id: 1, name: 'Student Portal', emoji: '👨‍🎓', dataDescription: 'GCS-hosted daily profile pictures', frequency: 'Multiple times daily', correctClass: 'Standard', hint: 'Hot objects belong in Standard' },
+  { id: 2, name: 'School Website', emoji: '🏫', dataDescription: 'Homepage banner images in Cloud Storage', frequency: 'Every page load', correctClass: 'Standard', hint: 'Public website assets need the hot tier' },
+  { id: 3, name: 'HR Department', emoji: '👔', dataDescription: 'Monthly payroll export objects', frequency: 'Once a month', correctClass: 'Nearline', hint: 'Nearline is built for about monthly access' },
+  { id: 4, name: 'Finance Team', emoji: '🧾', dataDescription: 'Monthly billing report archives', frequency: 'Once a month', correctClass: 'Nearline', hint: 'Monthly retrieval fits Nearline and its 30-day minimum' },
+  { id: 5, name: 'IT Department', emoji: '💻', dataDescription: 'Quarterly audit logs in GCS', frequency: 'Every 3 months', correctClass: 'Coldline', hint: 'Coldline fits data accessed about quarterly' },
+  { id: 6, name: 'Data Team', emoji: '📊', dataDescription: 'Old analytics snapshots', frequency: 'A few times per year', correctClass: 'Coldline', hint: 'Coldline balances low storage cost with occasional access' },
+  { id: 7, name: 'Legal Department', emoji: '⚖️', dataDescription: 'Legal records from 2015', frequency: 'Extremely rare, only if lawsuit', correctClass: 'Archive', hint: 'Archive is the GCP class for long-term retention' },
+  { id: 8, name: 'Archive Manager', emoji: '🗃️', dataDescription: 'Decade-old compliance exports', frequency: 'Virtually never', correctClass: 'Archive', hint: 'Archive has the lowest storage cost and a 365-day minimum' },
 ];
 
 export default function StorageClassShop() {
@@ -259,7 +259,7 @@ export default function StorageClassShop() {
               <span className="text-[10px] opacity-80 block mt-1">{sc.description}</span>
               <div className="flex justify-between mt-2 text-[10px] opacity-70">
                 <span>Cost: {sc.cost}</span>
-                <span>{sc.speed}</span>
+                <span>Min: {sc.minDuration}</span>
               </div>
             </motion.button>
           ))}
@@ -268,7 +268,7 @@ export default function StorageClassShop() {
         {/* Learning Tip */}
         <div className="p-3 bg-emerald-950/30 rounded-xl border border-emerald-900/30">
           <p className="text-[11px] text-emerald-400">
-            💡 <strong>Cloud Concept:</strong> <strong>Storage Classes</strong> control cost and retrieval speed. <strong>Standard</strong> = fast & expensive. <strong>Deep Archive</strong> = cheapest but slowest. Choose based on how often data is accessed!
+            💡 <strong>GCP Concept:</strong> <strong>Cloud Storage classes</strong> are <strong>Standard</strong>, <strong>Nearline</strong>, <strong>Coldline</strong>, and <strong>Archive</strong>. Choose based on access frequency, retrieval fees, and minimum storage duration.
           </p>
         </div>
       </div>
@@ -276,6 +276,7 @@ export default function StorageClassShop() {
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
         levelName="Storage Class Shop"
+        levelOrder={3}
         score={correctCount * 15}
         maxScore={customers.length * 15}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + correctCount * GAME_CONFIG.XP_PER_CORRECT}

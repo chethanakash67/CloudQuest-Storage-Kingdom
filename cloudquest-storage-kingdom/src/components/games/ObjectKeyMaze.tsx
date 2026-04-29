@@ -39,35 +39,35 @@ const MAZE_LAYOUT: CellType[][] = [
 const DOORS: Door[] = [
   {
     row: 3, col: 2,
-    question: 'Find the profile photo of student 101',
+    question: 'Find the GCS object name for the profile photo of student 101',
     correctKey: 'students/101/profile.jpg',
     options: ['students/101/profile.jpg', 'photos/student101.jpg', 'profile/101.png', 'student-101-pic.jpg'],
     solved: false,
   },
   {
     row: 3, col: 4,
-    question: 'Find the homework submission for course CS201, assignment 3',
-    correctKey: 'courses/CS201/assignments/3/submission.pdf',
-    options: ['courses/CS201/assignments/3/submission.pdf', 'homework/CS201-3.pdf', 'CS201/hw3.pdf', 'assignments/3/CS201.pdf'],
+    question: 'Find the GCS object name for course cs201, assignment 3',
+    correctKey: 'courses/cs201/assignments/3/submission.pdf',
+    options: ['courses/cs201/assignments/3/submission.pdf', 'homework/cs201-3.pdf', 'cs201/hw3.pdf', 'assignments/3/cs201.pdf'],
     solved: false,
   },
   {
     row: 5, col: 3,
-    question: 'Find the lecture video for Week 5 of Data Science',
+    question: 'Find the GCS object name for Week 5 of Data Science',
     correctKey: 'lectures/data-science/week-5/video.mp4',
     options: ['videos/ds-week5.mp4', 'lectures/data-science/week-5/video.mp4', 'data-science/5/lecture.mp4', 'week5-ds-lecture.mp4'],
     solved: false,
   },
   {
     row: 5, col: 6,
-    question: 'Find the database backup from January 2024',
+    question: 'Find the GCS object name for the database backup from January 2024',
     correctKey: 'backups/db/2024/01/full-backup.sql',
     options: ['backups/db/2024/01/full-backup.sql', 'backup-jan-2024.sql', 'db/backup/202401.sql', 'jan2024backup.sql'],
     solved: false,
   },
   {
     row: 7, col: 3,
-    question: 'Find the access log for the API server on March 15',
+    question: 'Find the GCS object name for the API server access log on March 15',
     correctKey: 'logs/api-server/2024/03/15/access.log',
     options: ['api-logs-march15.log', 'server/logs/march15.log', 'logs/api-server/2024/03/15/access.log', 'access-log-031524.log'],
     solved: false,
@@ -156,13 +156,13 @@ export default function ObjectKeyMaze() {
       );
       setSolvedCount((prev) => prev + 1);
       setPlayerPos({ row: activeDoor.row, col: activeDoor.col });
-      setFeedbackMsg({ text: '✅ Correct key! Door opened!', type: 'correct' });
+      setFeedbackMsg({ text: '✅ Correct object name! Door opened!', type: 'correct' });
     } else {
       playSound('wrong');
       playSound('damage');
       removeHeart();
       setWrongCount((prev) => prev + 1);
-      setFeedbackMsg({ text: '❌ Wrong key! Try again.', type: 'wrong' });
+      setFeedbackMsg({ text: '❌ Wrong object name! Try again.', type: 'wrong' });
       // Send player back
       if (moveHistory.length > 0) {
         setPlayerPos(moveHistory[moveHistory.length - 1]);
@@ -186,7 +186,7 @@ export default function ObjectKeyMaze() {
     addXP(GAME_CONFIG.XP_PER_LEVEL_COMPLETE);
     addCoins(GAME_CONFIG.COINS_PER_LEVEL_COMPLETE);
     completeLevel(2, s);
-    unlockBadge('Object Master');
+    unlockBadge('Object Name Master');
   };
 
   useEffect(() => {
@@ -227,9 +227,9 @@ export default function ObjectKeyMaze() {
         <div className="flex items-center justify-between py-4">
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              🔑 <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Object Key Maze</span>
+              🔑 <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">GCS Object Name Maze</span>
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Navigate the maze using correct object keys • {solvedCount}/{GAME_CONFIG.MAZE_DOORS_REQUIRED} doors</p>
+            <p className="text-xs text-gray-500 mt-1">Navigate the maze using correct GCS object names • {solvedCount}/{GAME_CONFIG.MAZE_DOORS_REQUIRED} doors</p>
           </div>
           {gameState === 'playing' && (
             <Timer duration={GAME_CONFIG.MAZE_TIME} onTimeUp={handleTimeUp} />
@@ -321,7 +321,7 @@ export default function ObjectKeyMaze() {
                   <span className="text-4xl mb-2 block">🔒</span>
                   <h3 className="text-lg font-bold text-white">Door Locked!</h3>
                   <p className="text-sm text-gray-400 mt-2">{activeDoor.question}</p>
-                  <p className="text-xs text-yellow-400 mt-1">Choose the correct object key:</p>
+                  <p className="text-xs text-yellow-400 mt-1">Choose the correct GCS object name:</p>
                 </div>
                 <div className="space-y-2">
                   {activeDoor.options.map((option) => (
@@ -342,14 +342,15 @@ export default function ObjectKeyMaze() {
         {/* Learning Tip */}
         <div className="p-3 bg-yellow-950/30 rounded-xl border border-yellow-900/30">
           <p className="text-[11px] text-yellow-400">
-            💡 <strong>Cloud Concept:</strong> An <strong>Object Key</strong> uniquely identifies an object within a bucket. Keys use folder-like paths (e.g., <code className="text-yellow-300">students/101/profile.jpg</code>) to organize data logically.
+            💡 <strong>GCP Concept:</strong> A <strong>GCS object name</strong> uniquely identifies an object within a bucket. Prefixes use folder-like paths (e.g., <code className="text-yellow-300">students/101/profile.jpg</code>) to organize data logically.
           </p>
         </div>
       </div>
 
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
-        levelName="Object Key Maze"
+        levelName="GCS Object Name Maze"
+        levelOrder={2}
         score={solvedCount * 20}
         maxScore={GAME_CONFIG.MAZE_DOORS_REQUIRED * 20}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + solvedCount * GAME_CONFIG.XP_PER_CORRECT}
@@ -363,7 +364,7 @@ export default function ObjectKeyMaze() {
       <GameOverModal
         isOpen={gameState === 'gameover'}
         reason={hearts <= 0 ? 'hearts' : 'time'}
-        levelName="Object Key Maze"
+        levelName="GCS Object Name Maze"
         score={solvedCount * 20}
         onRetry={handleRetry}
         onBackToMap={() => router.push('/map')}

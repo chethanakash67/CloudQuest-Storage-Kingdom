@@ -59,7 +59,7 @@ export default function LeaderboardPage() {
             <h1 className="text-2xl font-black font-['Outfit',sans-serif] text-white flex items-center gap-2">
               <Trophy className="w-6 h-6 text-yellow-400" /> Leaderboard
             </h1>
-            <p className="text-xs text-gray-500">Top Cloud Guardians</p>
+            <p className="text-xs text-gray-500">Top GCP Storage Guardians</p>
           </div>
         </div>
 

@@ -24,16 +24,16 @@ interface Character {
 }
 
 const ALL_CHARACTERS: Character[] = [
-  { id: 1, role: 'Teacher', emoji: '👩‍🏫', name: 'Prof. Cloud', action: 'READ', resource: 'assignments/cs101/hw3.pdf', shouldAllow: true, reason: 'Teachers can read assignment files' },
-  { id: 2, role: 'Student', emoji: '👨‍🎓', name: 'Alex Student', action: 'UPLOAD', resource: 'students/alex/submission.pdf', shouldAllow: true, reason: 'Students can upload their own files' },
-  { id: 3, role: 'Hacker', emoji: '🦹', name: 'DarkByte', action: 'DELETE', resource: 'system/database.sql', shouldAllow: false, reason: 'Hackers must always be blocked!' },
-  { id: 4, role: 'Admin', emoji: '👨‍💼', name: 'Admin One', action: 'MANAGE', resource: 'settings/bucket-policy.json', shouldAllow: true, reason: 'Admins can manage bucket settings' },
-  { id: 5, role: 'Hacker', emoji: '🕵️', name: 'PhishKing', action: 'READ', resource: 'users/passwords.csv', shouldAllow: false, reason: 'Suspicious entity targeting sensitive data' },
-  { id: 6, role: 'Student', emoji: '👩‍🎓', name: 'Maria Student', action: 'DELETE', resource: 'assignments/cs101/hw3.pdf', shouldAllow: false, reason: 'Students cannot delete assignment files' },
-  { id: 7, role: 'Teacher', emoji: '👨‍🏫', name: 'Dr. Storage', action: 'WRITE', resource: 'grades/cs101/final.csv', shouldAllow: true, reason: 'Teachers can write grade files' },
-  { id: 8, role: 'Anonymous', emoji: '👻', name: 'Unknown User', action: 'READ', resource: 'private/financial-report.xlsx', shouldAllow: false, reason: 'Anonymous users cannot access private files' },
-  { id: 9, role: 'Admin', emoji: '👩‍💻', name: 'SysAdmin', action: 'DELETE', resource: 'temp/old-cache.log', shouldAllow: true, reason: 'Admins can clean up temporary files' },
-  { id: 10, role: 'Hacker', emoji: '💀', name: 'RansomBot', action: 'WRITE', resource: 'system/config.yml', shouldAllow: false, reason: 'Malicious entity trying to corrupt config' },
+  { id: 1, role: 'Teacher Role', emoji: '👩‍🏫', name: 'Prof. Cloud', action: 'storage.objects.get', resource: 'gs://course-materials/assignments/cs101/hw3.pdf', shouldAllow: true, reason: 'The teacher custom IAM role can read assignment objects' },
+  { id: 2, role: 'Student Role', emoji: '👨‍🎓', name: 'Alex Student', action: 'storage.objects.create', resource: 'gs://student-submissions/students/alex/submission.pdf', shouldAllow: true, reason: 'Students can create objects inside their own submission prefix' },
+  { id: 3, role: 'Unknown', emoji: '🦹', name: 'DarkByte', action: 'storage.objects.delete', resource: 'gs://prod-backups/system/database.sql', shouldAllow: false, reason: 'Unknown principals should not delete production backup objects' },
+  { id: 4, role: 'Storage Admin', emoji: '👨‍💼', name: 'Admin One', action: 'storage.buckets.update', resource: 'gs://course-materials/iam-policy', shouldAllow: true, reason: 'The storage admin role can update GCS bucket settings' },
+  { id: 5, role: 'allUsers', emoji: '🕵️', name: 'Public Internet', action: 'storage.objects.get', resource: 'gs://private-records/users/passwords.csv', shouldAllow: false, reason: 'The allUsers principal must not read private data' },
+  { id: 6, role: 'Student Role', emoji: '👩‍🎓', name: 'Maria Student', action: 'storage.objects.delete', resource: 'gs://course-materials/assignments/cs101/hw3.pdf', shouldAllow: false, reason: 'Students can upload submissions, but cannot delete assignment objects' },
+  { id: 7, role: 'Teacher Role', emoji: '👨‍🏫', name: 'Dr. Storage', action: 'storage.objects.create', resource: 'gs://grades/cs101/final.csv', shouldAllow: true, reason: 'Teachers can write grade objects through the scoped IAM role' },
+  { id: 8, role: 'allAuthenticatedUsers', emoji: '👻', name: 'Any Signed-In User', action: 'storage.objects.get', resource: 'gs://private-records/financial-report.xlsx', shouldAllow: false, reason: 'allAuthenticatedUsers is still public-like access and should be blocked for private buckets' },
+  { id: 9, role: 'Service Account', emoji: '👩‍💻', name: 'Cleanup Job', action: 'storage.objects.delete', resource: 'gs://app-cache/temp/old-cache.log', shouldAllow: true, reason: 'A scoped service account can clean up temporary cache objects' },
+  { id: 10, role: 'Unknown', emoji: '💀', name: 'RansomBot', action: 'storage.objects.create', resource: 'gs://prod-config/system/config.yml', shouldAllow: false, reason: 'Unknown principals should not write configuration objects' },
 ];
 
 export default function PermissionDefenseGame() {
@@ -111,7 +111,7 @@ export default function PermissionDefenseGame() {
     addXP(GAME_CONFIG.XP_PER_LEVEL_COMPLETE);
     addCoins(GAME_CONFIG.COINS_PER_LEVEL_COMPLETE);
     completeLevel(5, s);
-    unlockBadge('Access Defender');
+    unlockBadge('IAM Defender');
   };
 
   useEffect(() => {
@@ -139,11 +139,13 @@ export default function PermissionDefenseGame() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'Teacher': return 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-      case 'Student': return 'text-green-400 bg-green-500/10 border-green-500/30';
-      case 'Hacker': return 'text-red-400 bg-red-500/10 border-red-500/30';
-      case 'Admin': return 'text-purple-400 bg-purple-500/10 border-purple-500/30';
-      case 'Anonymous': return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
+      case 'Teacher Role': return 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+      case 'Student Role': return 'text-green-400 bg-green-500/10 border-green-500/30';
+      case 'Storage Admin': return 'text-purple-400 bg-purple-500/10 border-purple-500/30';
+      case 'Service Account': return 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30';
+      case 'allUsers':
+      case 'allAuthenticatedUsers':
+      case 'Unknown': return 'text-red-400 bg-red-500/10 border-red-500/30';
       default: return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
     }
   };
@@ -156,9 +158,9 @@ export default function PermissionDefenseGame() {
         <div className="flex items-center justify-between py-4">
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              🏰 <span className="bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">Permission Defense</span>
+              🏰 <span className="bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">GCP IAM Permission Defense</span>
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Guard the castle • Wave {currentIndex + 1}/{characters.length} • Leaks: {dataLeaks}</p>
+            <p className="text-xs text-gray-500 mt-1">Guard GCS access • Wave {currentIndex + 1}/{characters.length} • Leaks: {dataLeaks}</p>
           </div>
           {gameState === 'playing' && (
             <Timer duration={GAME_CONFIG.PERMISSION_DEFENSE_TIME} onTimeUp={handleTimeUp} />
@@ -270,14 +272,15 @@ export default function PermissionDefenseGame() {
         {/* Learning Tip */}
         <div className="p-3 bg-red-950/30 rounded-xl border border-red-900/30">
           <p className="text-[11px] text-red-400">
-            💡 <strong>Cloud Concept:</strong> <strong>Access Control</strong> determines who can read, write, or manage cloud resources. Use <strong>IAM roles</strong> and <strong>bucket policies</strong> to enforce least-privilege access.
+            💡 <strong>GCP Concept:</strong> <strong>Cloud Storage IAM</strong> determines who can read, create, delete, or manage GCS resources. Use scoped IAM roles, service accounts, and Public Access Prevention to enforce least privilege.
           </p>
         </div>
       </div>
 
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
-        levelName="Permission Defense"
+        levelName="GCP IAM Permission Defense"
+        levelOrder={5}
         score={correctCount * 15}
         maxScore={characters.length * 15}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + correctCount * GAME_CONFIG.XP_PER_CORRECT}
@@ -291,7 +294,7 @@ export default function PermissionDefenseGame() {
       <GameOverModal
         isOpen={gameState === 'gameover'}
         reason={hearts <= 0 ? 'hearts' : 'time'}
-        levelName="Permission Defense"
+        levelName="GCP IAM Permission Defense"
         score={correctCount * 15}
         onRetry={handleRetry}
         onBackToMap={() => router.push('/map')}

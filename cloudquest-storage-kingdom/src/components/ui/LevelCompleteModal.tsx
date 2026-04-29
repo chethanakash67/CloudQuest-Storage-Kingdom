@@ -1,7 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ArrowRight, RotateCcw } from 'lucide-react';
+import { LEARNING_NOTES } from '@/lib/learningNotes';
+import { useGameStore } from '@/store/gameStore';
+import LearningNoteReveal from './LearningNoteReveal';
 
 interface LevelCompleteModalProps {
   isOpen: boolean;
@@ -15,6 +19,7 @@ interface LevelCompleteModalProps {
   onRetry: () => void;
   onBackToMap: () => void;
   isLastLevel?: boolean;
+  levelOrder?: number;
 }
 
 export default function LevelCompleteModal({
@@ -29,24 +34,44 @@ export default function LevelCompleteModal({
   onRetry,
   onBackToMap,
   isLastLevel = false,
+  levelOrder,
 }: LevelCompleteModalProps) {
+  const { unlockedNotes, unlockNote } = useGameStore();
+  const hasUnlockedRef = useRef(false);
+
+  // Find the learning note for this level
+  const note = levelOrder ? LEARNING_NOTES.find((n) => n.levelOrder === levelOrder) : undefined;
+  const isNewNote = note ? !unlockedNotes.includes(note.levelOrder) : false;
+
+  // Unlock the note when modal opens (via useEffect to avoid setState during render)
+  useEffect(() => {
+    if (isOpen && note && !hasUnlockedRef.current && !unlockedNotes.includes(note.levelOrder)) {
+      hasUnlockedRef.current = true;
+      unlockNote(note.levelOrder);
+    }
+    if (!isOpen) {
+      hasUnlockedRef.current = false;
+    }
+  }, [isOpen, note, unlockNote, unlockedNotes]);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
+          className="fixed inset-0 z-[100] overflow-y-auto px-4 py-6 sm:py-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-          <motion.div
-            className="relative z-10 flex flex-col items-center gap-5 p-8 rounded-2xl bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 border border-emerald-500/30 shadow-2xl shadow-emerald-500/10 max-w-md w-full mx-4"
-            initial={{ scale: 0.5, y: 50, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          >
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md" />
+          <div className="relative z-10 flex min-h-full items-start justify-center">
+            <motion.div
+              className="flex w-full max-w-md flex-col items-center gap-5 rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 p-5 shadow-2xl shadow-emerald-500/10 sm:p-8"
+              initial={{ scale: 0.5, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            >
             {/* Header */}
             <motion.div
               className="text-center"
@@ -109,6 +134,9 @@ export default function LevelCompleteModal({
               </div>
             </div>
 
+            {/* Learning Note */}
+            {note && <LearningNoteReveal note={note} isNew={isNewNote} />}
+
             {/* Actions */}
             <div className="flex flex-col gap-2 w-full">
               {!isLastLevel && (
@@ -134,7 +162,8 @@ export default function LevelCompleteModal({
                 </button>
               </div>
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

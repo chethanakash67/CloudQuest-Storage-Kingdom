@@ -24,11 +24,11 @@ interface FallingFile {
 }
 
 const FILE_TYPES = {
-  image: { emoji: '🖼️', color: 'from-pink-500 to-rose-600', label: 'Images' },
-  video: { emoji: '🎬', color: 'from-purple-500 to-violet-600', label: 'Videos' },
-  document: { emoji: '📄', color: 'from-blue-500 to-cyan-600', label: 'Documents' },
-  backup: { emoji: '💾', color: 'from-green-500 to-emerald-600', label: 'Backups' },
-  log: { emoji: '📋', color: 'from-orange-500 to-amber-600', label: 'Logs' },
+  image: { emoji: '🖼️', color: 'from-pink-500 to-rose-600', label: 'Images Bucket' },
+  video: { emoji: '🎬', color: 'from-purple-500 to-violet-600', label: 'Videos Bucket' },
+  document: { emoji: '📄', color: 'from-blue-500 to-cyan-600', label: 'Docs Bucket' },
+  backup: { emoji: '💾', color: 'from-green-500 to-emerald-600', label: 'Backups Bucket' },
+  log: { emoji: '📋', color: 'from-orange-500 to-amber-600', label: 'Logs Bucket' },
 };
 
 const FILE_POOL: Omit<FallingFile, 'id' | 'x' | 'y' | 'speed'>[] = [
@@ -188,9 +188,9 @@ export default function BucketSortingGame() {
         <div className="flex items-center justify-between py-4">
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              🏝️ <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Bucket Island: Sorting Game</span>
+              🏝️ <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">GCS Bucket Island: Sorting Game</span>
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Sort files into the correct buckets • {correctCount}/{GAME_CONFIG.BUCKET_SORT_REQUIRED} complete</p>
+            <p className="text-xs text-gray-500 mt-1">Sort files into the correct Google Cloud Storage buckets • {correctCount}/{GAME_CONFIG.BUCKET_SORT_REQUIRED} complete</p>
           </div>
           {gameState === 'playing' && (
             <Timer duration={GAME_CONFIG.BUCKET_SORT_TIME} onTimeUp={handleTimeUp} />
@@ -246,7 +246,7 @@ export default function BucketSortingGame() {
                 <p className="text-xs text-gray-400">Selected File</p>
                 <p className="text-sm font-bold text-white">{selectedFile.name}</p>
                 <div className="mt-2 space-y-1">
-                  <p className="text-[10px] text-gray-500">Key: <span className="text-gray-300">objects/{selectedFile.type}/{selectedFile.name}</span></p>
+                  <p className="text-[10px] text-gray-500">GCS URI: <span className="text-gray-300">gs://quest-{selectedFile.type}-bucket/{selectedFile.name}</span></p>
                   <p className="text-[10px] text-gray-500">Metadata: <span className="text-gray-300">{selectedFile.metadata}</span></p>
                   <p className="text-[10px] text-gray-500">Size: <span className="text-gray-300">{selectedFile.size}</span></p>
                 </div>
@@ -300,7 +300,7 @@ export default function BucketSortingGame() {
         {/* Learning Tip */}
         <div className="mt-4 p-3 bg-indigo-950/30 rounded-xl border border-indigo-900/30">
           <p className="text-[11px] text-indigo-400">
-            💡 <strong>Cloud Concept:</strong> A <strong>Bucket</strong> is a container for storing objects. Each <strong>Object</strong> has a name (key), metadata, and a size. Organizing files into the right buckets keeps your cloud storage efficient!
+            💡 <strong>GCP Concept:</strong> A <strong>Cloud Storage bucket</strong> is a GCP container for objects. Each <strong>object</strong> has a name, metadata, and size. Organizing objects into the right GCS buckets keeps storage efficient.
           </p>
         </div>
       </div>
@@ -308,7 +308,8 @@ export default function BucketSortingGame() {
       {/* Modals */}
       <LevelCompleteModal
         isOpen={gameState === 'complete'}
-        levelName="Bucket Island: Sorting Game"
+        levelName="GCS Bucket Island: Sorting Game"
+        levelOrder={1}
         score={correctCount * 10}
         maxScore={GAME_CONFIG.BUCKET_SORT_REQUIRED * 10}
         xpEarned={GAME_CONFIG.XP_PER_LEVEL_COMPLETE + correctCount * GAME_CONFIG.XP_PER_CORRECT}
@@ -322,7 +323,7 @@ export default function BucketSortingGame() {
       <GameOverModal
         isOpen={gameState === 'gameover'}
         reason={hearts <= 0 ? 'hearts' : 'time'}
-        levelName="Bucket Island: Sorting Game"
+        levelName="GCS Bucket Island: Sorting Game"
         score={correctCount * 10}
         onRetry={handleRetry}
         onBackToMap={() => router.push('/map')}

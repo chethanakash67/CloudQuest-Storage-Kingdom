@@ -88,13 +88,13 @@ export default function RewardsPage() {
         </div>
 
         {/* All badges hint */}
-        {unlockedBadges.length >= BADGES.length - 1 && !unlockedBadges.includes('Cloud Guardian') && (
+        {unlockedBadges.length >= BADGES.length - 1 && !unlockedBadges.includes('GCP Storage Guardian') && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="mt-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center"
           >
-            <p className="text-sm text-purple-300">✨ Complete all levels to earn the <strong>Cloud Guardian</strong> badge!</p>
+            <p className="text-sm text-purple-300">✨ Complete all levels to earn the <strong>GCP Storage Guardian</strong> badge!</p>
           </motion.div>
         )}
       </div>
